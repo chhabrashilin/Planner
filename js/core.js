@@ -32,17 +32,36 @@ class EventBus {
 class AppState {
     constructor() {
         this.state = {
-            theme: localStorage.getItem('planner-theme') || 'dark',
+            theme: this.safeGetItem('planner-theme', 'dark'),
             sidebarCollapsed: false,
             currentWorkspace: null,
             currentPage: null,
             selectedBlocks: [],
             commandPaletteOpen: false,
             searchQuery: '',
-            recentPages: JSON.parse(localStorage.getItem('planner-recent') || '[]'),
-            favorites: JSON.parse(localStorage.getItem('planner-favorites') || '[]')
+            recentPages: this.safeParseJSON('planner-recent', []),
+            favorites: this.safeParseJSON('planner-favorites', [])
         };
         this.listeners = new Map();
+    }
+
+    safeGetItem(key, defaultValue) {
+        try {
+            return localStorage.getItem(key) || defaultValue;
+        } catch {
+            return defaultValue;
+        }
+    }
+
+    safeParseJSON(key, defaultValue) {
+        try {
+            const item = localStorage.getItem(key);
+            if (!item) return defaultValue;
+            const parsed = JSON.parse(item);
+            return Array.isArray(parsed) ? parsed : defaultValue;
+        } catch {
+            return defaultValue;
+        }
     }
 
     get(key) {
@@ -192,6 +211,15 @@ class ThemeManager {
         }
         document.documentElement.setAttribute('data-theme', actualTheme);
         document.body.className = `theme-${actualTheme}`;
+
+        // Update theme toggle button icon
+        const themeBtn = document.getElementById('themeBtn');
+        if (themeBtn) {
+            const icon = themeBtn.querySelector('i');
+            if (icon) {
+                icon.className = actualTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+            }
+        }
     }
 
     toggle() {
@@ -201,10 +229,72 @@ class ThemeManager {
     }
 }
 
+// Toast notification utility
+class Toast {
+    static container = null;
+
+    static init() {
+        this.container = document.getElementById('toastContainer');
+        if (!this.container) {
+            this.container = document.createElement('div');
+            this.container.id = 'toastContainer';
+            this.container.className = 'toast-container';
+            document.body.appendChild(this.container);
+        }
+    }
+
+    static show(message, type = 'info', duration = 3000) {
+        if (!this.container) this.init();
+
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.setAttribute('role', 'alert');
+        toast.innerHTML = `
+            <span class="toast-message">${Utils.escapeHtml(message)}</span>
+            <button class="toast-close" aria-label="Close notification">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        `;
+
+        const closeBtn = toast.querySelector('.toast-close');
+        closeBtn.addEventListener('click', () => this.dismiss(toast));
+
+        this.container.appendChild(toast);
+
+        if (duration > 0) {
+            setTimeout(() => this.dismiss(toast), duration);
+        }
+
+        return toast;
+    }
+
+    static dismiss(toast) {
+        if (!toast || !toast.parentNode) return;
+        toast.style.animation = 'slideOut 0.2s ease forwards';
+        setTimeout(() => toast.remove(), 200);
+    }
+
+    static success(message, duration) {
+        return this.show(message, 'success', duration);
+    }
+
+    static error(message, duration) {
+        return this.show(message, 'error', duration);
+    }
+
+    static warning(message, duration) {
+        return this.show(message, 'warning', duration);
+    }
+
+    static info(message, duration) {
+        return this.show(message, 'info', duration);
+    }
+}
+
 // Utility functions
 const Utils = {
     generateId() {
-        return `${Date.now().toString(36)}-${Math.random().toString(36).substr(2, 9)}`;
+        return `${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 11)}`;
     },
 
     debounce(fn, delay) {
@@ -309,8 +399,31 @@ class PlannerApp {
         // Load initial content
         await this.loadInitialContent();
 
+        // Bind navbar button handlers
+        this.bindNavbarEvents();
+
         this.events.emit('app:ready');
         console.log('🚀 Planner App initialized');
+    }
+
+    bindNavbarEvents() {
+        // Theme toggle button
+        const themeBtn = document.getElementById('themeBtn');
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => this.toggleTheme());
+        }
+
+        // Sidebar toggle for mobile
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => this.toggleSidebar());
+        }
+
+        // Search button opens command palette
+        const searchBtn = document.getElementById('searchBtn');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', () => this.toggleCommandPalette());
+        }
     }
 
     async loadInitialContent() {
@@ -371,6 +484,12 @@ class PlannerApp {
         const isCollapsed = this.state.get('sidebarCollapsed');
         this.state.set('sidebarCollapsed', !isCollapsed);
         document.body.classList.toggle('sidebar-collapsed', !isCollapsed);
+
+        // Also toggle 'open' class for mobile view
+        const sidebar = document.querySelector('.app-sidebar');
+        if (sidebar) {
+            sidebar.classList.toggle('open', isCollapsed);
+        }
     }
 
     toggleTheme() {
@@ -398,4 +517,5 @@ class PlannerApp {
 window.EventBus = EventBus;
 window.AppState = AppState;
 window.Utils = Utils;
+window.Toast = Toast;
 window.PlannerApp = PlannerApp;

@@ -361,7 +361,18 @@ class DataManager {
     }
 
     async importAll(jsonString) {
-        const data = JSON.parse(jsonString);
+        // Parse and validate JSON
+        let data;
+        try {
+            data = JSON.parse(jsonString);
+        } catch (e) {
+            throw new Error('Invalid JSON format');
+        }
+
+        // Validate data structure
+        if (!this.validateImportData(data)) {
+            throw new Error('Invalid backup file format');
+        }
 
         // Clear existing data
         const stores = ['workspaces', 'pages', 'blocks', 'views', 'rows'];
@@ -372,28 +383,83 @@ class DataManager {
             }
         }
 
-        // Import new data
+        // Import new data with validation
         for (const workspace of data.workspaces || []) {
-            await this._add('workspaces', workspace);
+            if (this.validateWorkspace(workspace)) {
+                await this._add('workspaces', workspace);
+            }
         }
         for (const page of data.pages || []) {
-            await this._add('pages', page);
+            if (this.validatePage(page)) {
+                await this._add('pages', page);
+            }
         }
         for (const block of data.blocks || []) {
-            await this._add('blocks', block);
+            if (this.validateBlock(block)) {
+                await this._add('blocks', block);
+            }
         }
         for (const view of data.views || []) {
-            await this._add('views', view);
+            if (this.validateView(view)) {
+                await this._add('views', view);
+            }
         }
         for (const row of data.rows || []) {
-            await this._add('rows', row);
+            if (this.validateRow(row)) {
+                await this._add('rows', row);
+            }
         }
 
         return true;
     }
 
+    validateImportData(data) {
+        if (!data || typeof data !== 'object') return false;
+        if (typeof data.version !== 'number') return false;
+        return true;
+    }
+
+    validateWorkspace(workspace) {
+        return workspace &&
+            typeof workspace.id === 'string' &&
+            typeof workspace.name === 'string';
+    }
+
+    validatePage(page) {
+        return page &&
+            typeof page.id === 'string' &&
+            typeof page.workspaceId === 'string';
+    }
+
+    validateBlock(block) {
+        return block &&
+            typeof block.id === 'string' &&
+            typeof block.pageId === 'string' &&
+            typeof block.type === 'string';
+    }
+
+    validateView(view) {
+        return view &&
+            typeof view.id === 'string' &&
+            typeof view.databaseId === 'string';
+    }
+
+    validateRow(row) {
+        return row &&
+            typeof row.id === 'string' &&
+            typeof row.databaseId === 'string';
+    }
+
     // Migration from localStorage
     async migrateFromLocalStorage() {
+        // Check if already migrated first
+        try {
+            if (localStorage.getItem('plannerMigrated') === 'true') return;
+        } catch {
+            // localStorage not available
+            return;
+        }
+
         const oldTasks = localStorage.getItem('calendarPlannerTasks');
         if (!oldTasks) return;
 
@@ -401,9 +467,13 @@ class DataManager {
             const tasks = JSON.parse(oldTasks);
             if (!Array.isArray(tasks) || tasks.length === 0) return;
 
-            // Check if already migrated
+            // Check if already has data
             const workspaces = await this.getWorkspaces();
-            if (workspaces.length > 0) return;
+            if (workspaces.length > 0) {
+                // Mark as migrated to avoid checking again
+                localStorage.setItem('plannerMigrated', 'true');
+                return;
+            }
 
             // Create workspace
             const workspace = await this.createWorkspace({

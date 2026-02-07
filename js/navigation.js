@@ -287,8 +287,51 @@ class CommandPalette {
 
     showShortcuts() {
         const shortcuts = this.app.keyboard.getShortcuts();
-        // Show in a modal or overlay
-        alert(shortcuts.map(s => `${s.combo}: ${s.description}`).join('\n'));
+        // Create and show a modal with shortcuts
+        const existingModal = document.getElementById('shortcutsModal');
+        if (existingModal) existingModal.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'shortcutsModal';
+        modal.className = 'modal-overlay open';
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-labelledby', 'shortcutsTitle');
+        modal.innerHTML = `
+            <div class="modal" style="max-width: 400px;">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="shortcutsTitle">Keyboard Shortcuts</h3>
+                    <button class="modal-close" aria-label="Close">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="shortcuts-list">
+                        ${shortcuts.map(s => `
+                            <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--color-border);">
+                                <span>${Utils.escapeHtml(s.description)}</span>
+                                <kbd style="font-size: 12px;">${Utils.escapeHtml(s.combo.replace(/\+/g, ' + '))}</kbd>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // Close handlers
+        const closeBtn = modal.querySelector('.modal-close');
+        closeBtn.addEventListener('click', () => modal.remove());
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.remove();
+        });
+        document.addEventListener('keydown', function closeOnEsc(e) {
+            if (e.key === 'Escape') {
+                modal.remove();
+                document.removeEventListener('keydown', closeOnEsc);
+            }
+        });
     }
 
     handleKeydown(e) {

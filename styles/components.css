@@ -372,6 +372,18 @@
     }
 }
 
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
 .toast-success {
     border-left: 3px solid var(--color-success);
 }
