@@ -1,5 +1,5 @@
 /**
- * Notion-Level Planner - View Styles
+ * Planner - View Styles
  * Calendar, Kanban, Table, Gallery, and List views
  */
 
@@ -21,6 +21,10 @@
 .view-tabs {
     display: flex;
     gap: var(--space-1);
+    background: var(--color-bg-secondary);
+    padding: var(--space-1);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
 }
 
 .view-tab {
@@ -30,7 +34,7 @@
     padding: var(--space-2) var(--space-3);
     font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-full);
     cursor: pointer;
     transition: all var(--transition-fast);
 }
@@ -43,7 +47,7 @@
 .view-tab.active {
     background: var(--color-bg-active);
     color: var(--color-text-primary);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
 }
 
 .view-controls {
@@ -76,8 +80,8 @@
 }
 
 .calendar-nav-btn {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -97,8 +101,9 @@
     gap: 1px;
     background: var(--color-border);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-2xl);
     overflow: hidden;
+    box-shadow: var(--shadow-sm);
 }
 
 .calendar-day-header {
@@ -108,10 +113,12 @@
     text-align: center;
     color: var(--color-text-secondary);
     background: var(--color-bg-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
 }
 
 .calendar-day {
-    min-height: 100px;
+    min-height: 110px;
     padding: var(--space-2);
     background: var(--color-bg-primary);
     cursor: pointer;
@@ -123,7 +130,7 @@
 }
 
 .calendar-day.other-month {
-    opacity: 0.4;
+    opacity: 0.45;
 }
 
 .calendar-day.today {
@@ -148,7 +155,7 @@
     align-items: center;
     justify-content: center;
     background: var(--color-accent);
-    color: white;
+    color: #021316;
     border-radius: var(--radius-full);
 }
 
@@ -184,19 +191,20 @@
 
 .kanban-column {
     flex-shrink: 0;
-    width: 280px;
+    width: 300px;
     background: var(--color-bg-secondary);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-2xl);
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - 200px);
+    max-height: calc(100vh - 220px);
+    box-shadow: var(--shadow-sm);
 }
 
 .kanban-column-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-3);
+    padding: var(--space-3) var(--space-4);
     border-bottom: 1px solid var(--color-border);
 }
 
@@ -212,8 +220,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 20px;
-    height: 20px;
+    min-width: 22px;
+    height: 22px;
     padding: 0 var(--space-1);
     font-size: var(--font-size-xs);
     color: var(--color-text-tertiary);
@@ -224,7 +232,7 @@
 .kanban-cards {
     flex: 1;
     overflow-y: auto;
-    padding: var(--space-2);
+    padding: var(--space-3);
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
@@ -234,7 +242,7 @@
     padding: var(--space-3);
     background: var(--color-bg-primary);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     cursor: pointer;
     transition: all var(--transition-fast);
 }
@@ -242,15 +250,16 @@
 .kanban-card:hover {
     border-color: var(--color-border-strong);
     box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
 }
 
 .kanban-card.dragging {
-    opacity: 0.5;
+    opacity: 0.6;
 }
 
 .kanban-card-title {
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
     margin-bottom: var(--space-2);
 }
 
@@ -270,7 +279,7 @@
     padding: var(--space-1) var(--space-2);
     font-size: var(--font-size-xs);
     background: var(--color-bg-tertiary);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-full);
 }
 
 .kanban-add-card {
@@ -299,8 +308,9 @@
 .table-wrapper {
     min-width: 100%;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-2xl);
     overflow: hidden;
+    box-shadow: var(--shadow-sm);
 }
 
 .data-table {
@@ -310,7 +320,7 @@
 
 .data-table th,
 .data-table td {
-    padding: var(--space-3);
+    padding: var(--space-3) var(--space-4);
     text-align: left;
     border-bottom: 1px solid var(--color-border);
 }
@@ -321,7 +331,7 @@
     color: var(--color-text-secondary);
     background: var(--color-bg-secondary);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.14em;
 }
 
 .data-table td {
@@ -373,7 +383,7 @@
 .gallery-card {
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-2xl);
     overflow: hidden;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -382,7 +392,7 @@
 .gallery-card:hover {
     border-color: var(--color-border-strong);
     box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
 }
 
 .gallery-card-image {
@@ -406,7 +416,7 @@
 }
 
 .gallery-card-title {
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
     margin-bottom: var(--space-2);
 }
 
@@ -431,7 +441,7 @@
     display: flex;
     align-items: flex-start;
     gap: var(--space-3);
-    padding: var(--space-3);
+    padding: var(--space-3) var(--space-4);
     border-bottom: 1px solid var(--color-border);
     cursor: pointer;
     transition: background var(--transition-fast);
@@ -459,7 +469,7 @@
 }
 
 .list-item-title {
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
 }
 
 .list-item.completed .list-item-title {
@@ -489,7 +499,8 @@
     margin-bottom: var(--space-4);
     padding: var(--space-2);
     background: var(--color-bg-secondary);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
 }
 
 .filter-btn {
@@ -499,7 +510,7 @@
     padding: var(--space-2) var(--space-3);
     font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-full);
     transition: all var(--transition-fast);
 }
 

@@ -1,5 +1,5 @@
 /**
- * Notion-Level Planner - Block Styles
+ * Planner - Block Styles
  */
 
 /* Block Base */
@@ -7,10 +7,10 @@
     position: relative;
     display: flex;
     align-items: flex-start;
-    padding: var(--space-1) 0;
+    padding: var(--space-2) 0;
     margin: var(--space-1) 0;
     border-radius: var(--radius-md);
-    transition: background var(--transition-fast);
+    transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
 .block:hover {
@@ -19,10 +19,11 @@
 
 .block.focused {
     background: var(--color-bg-hover);
+    box-shadow: inset 0 0 0 1px rgba(45, 212, 191, 0.25);
 }
 
 .block.dragging {
-    opacity: 0.5;
+    opacity: 0.6;
 }
 
 .block.drag-over {
@@ -31,10 +32,10 @@
 
 .block-handle {
     position: absolute;
-    left: -24px;
+    left: -28px;
     top: 50%;
     transform: translateY(-50%);
-    width: 18px;
+    width: 20px;
     height: 24px;
     display: flex;
     align-items: center;
@@ -50,7 +51,7 @@
 
 .block-actions {
     position: absolute;
-    left: -48px;
+    left: -54px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
@@ -63,14 +64,15 @@
 }
 
 .block-action-btn {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--color-text-tertiary);
     border-radius: var(--radius-sm);
     font-size: var(--font-size-xs);
+    transition: all var(--transition-fast);
 }
 
 .block-action-btn:hover {
@@ -80,9 +82,9 @@
 
 .block-content {
     flex: 1;
-    min-height: 1.5em;
+    min-height: 1.6em;
     padding: var(--space-1) var(--space-2);
-    line-height: var(--line-height-normal);
+    line-height: var(--line-height-relaxed);
     outline: none;
     word-break: break-word;
 }
@@ -97,6 +99,7 @@
 .block-heading {
     font-weight: var(--font-weight-semibold);
     margin: 0;
+    font-family: var(--font-display);
 }
 
 h1.block-content {
@@ -126,7 +129,7 @@ h3.block-content {
 .block-number {
     flex-shrink: 0;
     width: 20px;
-    height: 1.5em;
+    height: 1.6em;
     display: flex;
     align-items: center;
     color: var(--color-text-secondary);
@@ -134,7 +137,7 @@ h3.block-content {
 
 .block-bullet {
     justify-content: center;
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 
 .block-number {
@@ -154,7 +157,7 @@ h3.block-content {
     flex-shrink: 0;
     width: 18px;
     height: 18px;
-    margin-top: 3px;
+    margin-top: 4px;
     accent-color: var(--color-accent);
     cursor: pointer;
 }
@@ -174,8 +177,8 @@ h3.block-content {
 
 .block-toggle-btn {
     flex-shrink: 0;
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -192,9 +195,11 @@ h3.block-content {
 /* Quote */
 .block-quote {
     margin: 0;
-    padding: var(--space-2) var(--space-4);
-    border-left: 3px solid var(--color-text-primary);
+    padding: var(--space-3) var(--space-4);
+    border-left: 3px solid var(--color-accent);
     font-size: var(--font-size-lg);
+    background: rgba(45, 212, 191, 0.08);
+    border-radius: var(--radius-lg);
 }
 
 .block-quote .block-content {
@@ -208,7 +213,8 @@ h3.block-content {
     width: 100%;
     padding: var(--space-4);
     background: var(--color-bg-tertiary);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
 }
 
 .block-callout-icon {
@@ -234,8 +240,9 @@ h3.block-content {
 .block-code {
     width: 100%;
     background: var(--color-bg-tertiary);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     overflow: hidden;
+    border: 1px solid var(--color-border);
 }
 
 .block-code-header {
@@ -270,9 +277,10 @@ h3.block-content {
 
 .block-image img {
     width: 100%;
-    max-height: 500px;
+    max-height: 520px;
     object-fit: contain;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
 }
 
 .block-image-placeholder {
@@ -283,7 +291,7 @@ h3.block-content {
     padding: var(--space-8);
     background: var(--color-bg-tertiary);
     border: 2px dashed var(--color-border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     color: var(--color-text-tertiary);
     cursor: pointer;
 }
@@ -315,8 +323,9 @@ h3.block-content {
     padding: var(--space-4);
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     text-decoration: none;
+    box-shadow: var(--shadow-sm);
 }
 
 .block-bookmark-content {
@@ -325,7 +334,7 @@ h3.block-content {
 }
 
 .block-bookmark-title {
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -343,10 +352,10 @@ h3.block-content {
 
 .block-bookmark-image {
     flex-shrink: 0;
-    width: 100px;
-    height: 80px;
+    width: 110px;
+    height: 90px;
     object-fit: cover;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
 }
 
 .block-bookmark-input {
@@ -356,17 +365,17 @@ h3.block-content {
     padding: var(--space-3);
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
 }
 
 /* Block Menu */
 .block-menu {
     position: fixed;
-    width: 320px;
-    max-height: 400px;
+    width: 340px;
+    max-height: 420px;
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-2xl);
     box-shadow: var(--shadow-xl);
     overflow: hidden;
     z-index: var(--z-dropdown);
@@ -379,6 +388,7 @@ h3.block-content {
     color: var(--color-text-tertiary);
     text-transform: uppercase;
     border-bottom: 1px solid var(--color-border);
+    letter-spacing: 0.14em;
 }
 
 .block-menu-items {
@@ -392,7 +402,7 @@ h3.block-content {
     align-items: center;
     gap: var(--space-3);
     padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     cursor: pointer;
 }
 
@@ -402,8 +412,8 @@ h3.block-content {
 }
 
 .block-menu-item-icon {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -414,7 +424,7 @@ h3.block-content {
 
 .block-menu-item-name {
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-text-primary);
 }
 
@@ -428,7 +438,7 @@ h3.block-content {
     padding: var(--space-4);
     color: var(--color-text-tertiary);
     cursor: text;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
 }
 
 .block-placeholder:hover {
@@ -444,15 +454,15 @@ h3.block-content {
     padding: var(--space-1);
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
     transform: translateX(-50%);
     z-index: var(--z-popover);
 }
 
 .format-btn {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -538,5 +548,5 @@ h3.block-content {
 
 .emoji-btn:hover {
     background: var(--color-bg-hover);
-    transform: scale(1.2);
+    transform: scale(1.15);
 }
